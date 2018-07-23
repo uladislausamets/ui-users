@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import makeQueryFunction from '@folio/stripes-components/util/makeQueryFunction';
+import IconWithText from '@folio/stripes-components/lib/IconWithText';
 
 import SearchAndSort from '@folio/stripes-smart-components/lib/SearchAndSort';
 
@@ -184,7 +185,12 @@ class Users extends React.Component {
     const patronGroups = (this.props.resources.patronGroups || {}).records || [];
 
     const resultsFormatter = {
-      status: user => (user.active ? intl.formatMessage({ id: 'ui-users.active' }) : intl.formatMessage({ id: 'ui-users.inactive' })),
+      status: user => (
+        <IconWithText
+          text={user.active ? intl.formatMessage({ id: 'ui-users.active' }) : intl.formatMessage({ id: 'ui-users.inactive' })}
+          app="users"
+        />
+      ),
       name: user => getFullName(user),
       barcode: user => user.barcode,
       patronGroup: (user) => {
