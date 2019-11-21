@@ -121,6 +121,10 @@ describe('Manual charges', () => {
 
   describe('create new manual feature', () => {
     beforeEach(async () => {
+
+      await FeeFineInteractor.list.rows(0).select(0).isPresent;
+      await FeeFineInteractor.list.rows(0).select(1).isPresent;
+
       await FeeFineInteractor.newItemButton.click();
       await FeeFineInteractor.list.rows(0).textfield(0).fillAndBlur('New feefine');
       await FeeFineInteractor.list.rows(0).textfield(1).fillAndBlur('100');
