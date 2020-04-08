@@ -444,6 +444,8 @@ class UserSearch extends React.Component {
                           autosize
                           virtualize
                           hasMargin
+                          pageAmount={100}
+                          pagingType="click"
                         />
 
                       </Pane>

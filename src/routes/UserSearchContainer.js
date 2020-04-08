@@ -16,8 +16,7 @@ import {
 import filterConfig from './filterConfig';
 import { UserSearch } from '../views';
 
-const INITIAL_RESULT_COUNT = 30;
-const RESULT_COUNT_INCREMENT = 30;
+const INITIAL_RESULT_COUNT = 100;
 const MAX_LIMIT = 2147483647; // from https://s3.amazonaws.com/foliodocs/api/mod-circulation/p/circulation.html#circulation_loans_get
 
 const compileQuery = template(
@@ -32,11 +31,12 @@ class UserSearchContainer extends React.Component {
     initializedFilterConfig: { initialValue: false },
     query: { initialValue: { sort: 'name' } },
     resultCount: { initialValue: INITIAL_RESULT_COUNT },
+    resultOffset: { initialValue: 0 },
     records: {
       type: 'okapi',
       records: 'users',
-      recordsRequired: '%{resultCount}',
-      perRequest: 30,
+      resultOffset: '%{resultOffset}',
+      perRequest: 100,
       path: 'users',
       GET: {
         params: {
@@ -91,7 +91,9 @@ class UserSearchContainer extends React.Component {
     resources: PropTypes.shape({
       patronGroups: PropTypes.shape({
         records: PropTypes.arrayOf(PropTypes.object),
-      })
+      }),
+      resultCount: PropTypes.number.isRequired,
+      resultOffset: PropTypes.number.isRequired,
     }).isRequired,
     mutator: PropTypes.shape({
       initializedFilterConfig: PropTypes.shape({
@@ -143,8 +145,13 @@ class UserSearchContainer extends React.Component {
   }
 
   onNeedMoreData = () => {
+    const {
+      resultCount,
+      resultOffset,
+    } = this.props.resources;
+
     if (this.source) {
-      this.source.fetchMore(RESULT_COUNT_INCREMENT);
+      this.source.fetchOffset(resultCount + resultOffset);
     }
   };
 
